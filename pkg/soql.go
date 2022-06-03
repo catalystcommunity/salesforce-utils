@@ -1,4 +1,4 @@
-package salesforce_utils
+package pkg
 
 import (
 	"encoding/json"

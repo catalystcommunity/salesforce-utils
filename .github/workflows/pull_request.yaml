@@ -1,50 +1,28 @@
-name: Test
+name: Pull Request
 on:
   pull_request:
     branches:
       - main
+    paths:
+      - 'pkg/**'
+      - 'go.mod'
+      - 'go.sum'
 jobs:
-  validate-pr-title:
-    name: Validate Conventional Commits PR
+  conventional-commits-pr:
     if: github.event.pull_request.draft == false
+    name: Validate Conventional Commits PR
     runs-on: ubuntu-latest
     steps:
       - uses: crazy-max/ghaction-dump-context@v1
-      - uses: amannn/action-semantic-pull-request@v3.4.6
-        with:
-          types: |
-            fix
-            feat
-            norelease
-          validateSingleCommit: true
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-  test:
+      - uses: catalystsquad/action-validate-conventional-commits-pr@v1
+  ensure-compile:
     if: github.event.pull_request.draft == false
-    name: Test
+    name: Ensure project compiles
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Setup cache
-        uses: actions/cache@v2
-        with:
-          # In order:
-          # * go Module download cache
-          # * go Build cache (Linux)
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
-          restore-keys: |
-            ${{ runner.os }}-go-
-      - name: Setup go
-        uses: actions/setup-go@v2
-        with:
-          go-version: 1.17
-      - name: Compile
+      - uses: crazy-max/ghaction-dump-context@v1
+      - name: Auth Github
         run: |
           git config --global url."https://${{ secrets.AUTOMATION_PAT }}@github.com".insteadOf "https://github.com"
-          go build ./...
-          cd test
-          go test
+      - name: Compile
+        uses: catalystsquad/action-compile-go@v1
