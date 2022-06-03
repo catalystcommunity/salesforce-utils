@@ -1,9 +1,13 @@
 package salesforce_utils
 
-import "github.com/valyala/fasthttp"
+import (
+	"fmt"
+	"github.com/valyala/fasthttp"
+)
 
 // sendRequest sends a configured request, returning the body, status code, and error
-func sendRequest(req *fasthttp.Request) ([]byte, int, error) {
+func (s SalesforceUtils) sendRequest(req *fasthttp.Request) ([]byte, int, error) {
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", s.Credentials.AccessToken))
 	res := fasthttp.AcquireResponse()
 	defer fasthttp.ReleaseResponse(res)
 	err := fasthttp.Do(req, res)
