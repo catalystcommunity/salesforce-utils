@@ -14,12 +14,12 @@ type SalesforceUtils struct {
 
 type Config struct {
 	BaseUrl      string `valid:"url,required"`
-	ApiVersion   string `valid:"alphanum,required"`
-	ClientId     string `valid:"alphanum,required"`
-	ClientSecret string `valid:"alphanum,required"`
-	Username     string `valid:"alphanum,required"`
-	Password     string `valid:"alphanum,required"`
-	GrantType    string `valid:"alphanum,required"`
+	ApiVersion   string `valid:"required"`
+	ClientId     string `valid:"required"`
+	ClientSecret string `valid:"required"`
+	Username     string `valid:"required"`
+	Password     string `valid:"required"`
+	GrantType    string `valid:"required"`
 }
 
 // NewSalesforceUtils creates a new instance of SalesforceUtils with the given configuration. If any configuration is
@@ -30,7 +30,7 @@ func NewSalesforceUtils(authenticate bool, config Config) (utils SalesforceUtils
 		config.BaseUrl = os.Getenv("SALESFORCE_BASE_URL")
 	}
 	if config.ApiVersion == "" {
-		config.ApiVersion = os.Getenv("SALESFORCE_API_VERSION")
+		config.ApiVersion = env.GetEnvOrDefault("SALESFORCE_API_VERSION", "55.0")
 	}
 	if config.ClientId == "" {
 		config.ClientId = os.Getenv("SALESFORCE_CLIENT_ID")
