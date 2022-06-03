@@ -41,7 +41,7 @@ func (s SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
 	uri := s.getAuthUrl()
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodPost)
-	return sendRequest(req)
+	return s.sendRequest(req)
 }
 
 // getAuthUrl gets a formatted url to the token endpoint

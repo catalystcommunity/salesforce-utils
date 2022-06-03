@@ -22,7 +22,7 @@ func (s SalesforceUtils) CreateObject(typeName string, jsonBytes []byte) (respon
 	req.Header.SetMethod(http.MethodPost)
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBody(jsonBytes)
-	body, statusCode, requestErr := sendRequest(req)
+	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -43,7 +43,7 @@ func (s SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (re
 	req.Header.SetMethod(http.MethodPatch)
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBody(jsonBytes)
-	body, statusCode, requestErr := sendRequest(req)
+	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -62,7 +62,7 @@ func (s SalesforceUtils) DeleteObject(typeName, id string) error {
 	uri := s.getObjectIdUrl(typeName, id)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodDelete)
-	body, statusCode, err := sendRequest(req)
+	body, statusCode, err := s.sendRequest(req)
 	if err != nil {
 		return err
 	}

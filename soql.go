@@ -23,7 +23,7 @@ func (s SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse, 
 	uri := s.getQueryUrl(query)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodPost)
-	body, statusCode, requestErr := sendRequest(req)
+	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -42,7 +42,7 @@ func (s SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlRes
 	uri := s.getNextRecordsUrl(nextRecordsUrl)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodPost)
-	body, statusCode, requestErr := sendRequest(req)
+	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
 		return
