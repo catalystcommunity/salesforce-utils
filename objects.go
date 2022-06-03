@@ -14,7 +14,7 @@ type ObjectResponse struct {
 	Success bool
 }
 
-func (s SalesforceUtils) CreateObject(typeName string, jsonBytes []byte) (response ObjectResponse, err error) {
+func (s *SalesforceUtils) CreateObject(typeName string, jsonBytes []byte) (response ObjectResponse, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getTypeUrl(typeName)
@@ -35,7 +35,7 @@ func (s SalesforceUtils) CreateObject(typeName string, jsonBytes []byte) (respon
 	return
 }
 
-func (s SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (response ObjectResponse, err error) {
+func (s *SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (response ObjectResponse, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getObjectIdUrl(typeName, id)
@@ -56,7 +56,7 @@ func (s SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (re
 	return
 }
 
-func (s SalesforceUtils) DeleteObject(typeName, id string) error {
+func (s *SalesforceUtils) DeleteObject(typeName, id string) error {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getObjectIdUrl(typeName, id)
@@ -73,15 +73,15 @@ func (s SalesforceUtils) DeleteObject(typeName, id string) error {
 }
 
 // getDataUrl gets a formatted url to the data endpoint
-func (s SalesforceUtils) getDataUrl() string {
+func (s *SalesforceUtils) getDataUrl() string {
 	return fmt.Sprintf("%s/services/data/v%s/sobjects", s.Config.BaseUrl, s.Config.ApiVersion)
 }
 
-func (s SalesforceUtils) getTypeUrl(typeName string) string {
+func (s *SalesforceUtils) getTypeUrl(typeName string) string {
 	return fmt.Sprintf("%s/%s", s.getDataUrl(), typeName)
 }
 
 // getObjectIdUrl gets a formatted url to the endoint for a specific object by id
-func (s SalesforceUtils) getObjectIdUrl(typeName, id string) string {
+func (s *SalesforceUtils) getObjectIdUrl(typeName, id string) string {
 	return fmt.Sprintf("%s/%s", s.getTypeUrl(typeName), id)
 }

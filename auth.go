@@ -20,7 +20,7 @@ type SalesforceCredentials struct {
 }
 
 // Authenticate authenticates with salesforce, storing the resulting credentials on the SalesforceUtils object
-func (s SalesforceUtils) Authenticate() error {
+func (s *SalesforceUtils) Authenticate() error {
 	body, statusCode, err := s.getSalesforceAccessToken()
 	if err != nil || statusCode != 200 {
 		return errorx.Decorate(err, "error getting access token with status code: %d and body: %s", statusCode, body)
@@ -35,7 +35,7 @@ func (s SalesforceUtils) Authenticate() error {
 }
 
 // getSalesforceAccessToken makes an http request to the salesforce api to get an access token
-func (s SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
+func (s *SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getAuthUrl()
@@ -45,7 +45,7 @@ func (s SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
 }
 
 // getAuthUrl gets a formatted url to the token endpoint
-func (s SalesforceUtils) getAuthUrl() string {
+func (s *SalesforceUtils) getAuthUrl() string {
 	params := url.Values{}
 	params.Add("client_id", s.Config.ClientId)
 	params.Add("client_secret", s.Config.ClientSecret)

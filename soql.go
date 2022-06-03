@@ -17,7 +17,7 @@ type SoqlResponse struct {
 	NextRecordsUrl string
 }
 
-func (s SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse, err error) {
+func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getQueryUrl(query)
@@ -36,7 +36,7 @@ func (s SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse, 
 	return
 }
 
-func (s SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlResponse, err error) {
+func (s *SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlResponse, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getNextRecordsUrl(nextRecordsUrl)
@@ -56,12 +56,12 @@ func (s SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlRes
 }
 
 // getSoqlUrl gets a formatted url to the soql endpoint
-func (s SalesforceUtils) getSoqlUrl() string {
+func (s *SalesforceUtils) getSoqlUrl() string {
 	return fmt.Sprintf("%s/services/data/v%s/query", s.Config.BaseUrl, s.Config.ApiVersion)
 }
 
 // getQueryUrl gets a formatted url to the soql endpoint with the formatted query string included
-func (s SalesforceUtils) getQueryUrl(query string) string {
+func (s *SalesforceUtils) getQueryUrl(query string) string {
 	// salesforce expects `+` in place of spaces
 	formattedQuery := strings.Replace(query, " ", "+", -1)
 	// url encode the query
@@ -71,6 +71,6 @@ func (s SalesforceUtils) getQueryUrl(query string) string {
 }
 
 // getSoqlUrl gets a formatted url to the soql endpoint
-func (s SalesforceUtils) getNextRecordsUrl(nextRecordsUrl string) string {
+func (s *SalesforceUtils) getNextRecordsUrl(nextRecordsUrl string) string {
 	return fmt.Sprintf("%s/%s", s.Config.BaseUrl, nextRecordsUrl)
 }
