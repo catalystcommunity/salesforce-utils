@@ -6,6 +6,7 @@ import (
 	"github.com/joomcode/errorx"
 	"github.com/valyala/fasthttp"
 	"net/http"
+	"net/url"
 )
 
 // SalesforceCredentials represents the response from salesforce's /services/oauth2/token endpoint to get an access token
@@ -45,5 +46,11 @@ func (s SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
 
 // getAuthUrl gets a formatted url to the token endpoint
 func (s SalesforceUtils) getAuthUrl() string {
-	return fmt.Sprintf("%s/services/oauth2/token?client_id=%s&client_secret=%s&username=%s&password=%s&grant_type=%s", s.Config.BaseUrl, s.Config.ClientId, s.Config.ClientSecret, s.Config.Username, s.Config.Password, s.Config.GrantType)
+	params := url.Values{}
+	params.Add("client_id", s.Config.ClientId)
+	params.Add("client_secret", s.Config.ClientSecret)
+	params.Add("username", s.Config.Username)
+	params.Add("password", s.Config.Password)
+	params.Add("grant_type", s.Config.GrantType)
+	return fmt.Sprintf("%s/services/oauth2/token?%s", s.Config.BaseUrl, params.Encode())
 }
