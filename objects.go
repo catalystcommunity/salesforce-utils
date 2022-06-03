@@ -28,14 +28,14 @@ func (s *SalesforceUtils) CreateObject(typeName string, jsonBytes []byte) (respo
 		return
 	}
 	if statusCode != http.StatusCreated {
-		err = errorx.Decorate(err, "unexpected status code: %d with body: %s", statusCode, body)
+		err = errorx.IllegalState.New("unexpected status code: %d with body: %s", statusCode, body)
 		return
 	}
 	err = json.Unmarshal(body, &response)
 	return
 }
 
-func (s *SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (response ObjectResponse, err error) {
+func (s *SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) error {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getObjectIdUrl(typeName, id)
@@ -45,15 +45,12 @@ func (s *SalesforceUtils) UpdateObject(typeName, id string, jsonBytes []byte) (r
 	req.SetBody(jsonBytes)
 	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
-		err = requestErr
-		return
+		return requestErr
 	}
-	if statusCode != http.StatusCreated {
-		err = errorx.Decorate(err, "unexpected status code: %d with body: %s", statusCode, body)
-		return
+	if statusCode != http.StatusNoContent {
+		return errorx.IllegalState.New("unexpected status code: %d with body: %s", statusCode, body)
 	}
-	err = json.Unmarshal(body, &response)
-	return
+	return nil
 }
 
 func (s *SalesforceUtils) DeleteObject(typeName, id string) error {
@@ -67,7 +64,7 @@ func (s *SalesforceUtils) DeleteObject(typeName, id string) error {
 		return err
 	}
 	if statusCode != http.StatusNoContent {
-		return errorx.Decorate(err, "unexpected status code: %d with body: %s", statusCode, body)
+		return errorx.IllegalState.New("unexpected status code: %d with body: %s", statusCode, body)
 	}
 	return nil
 }
