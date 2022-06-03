@@ -25,7 +25,7 @@ type Config struct {
 // NewSalesforceUtils creates a new instance of SalesforceUtils with the given configuration. If any configuration is
 // not set, it will look up the value from environment variables instead. If the configuration is inavlid, an error
 // will be returned.
-func NewSalesforceUtils(authenticate bool, config Config) (utils SalesforceUtils, err error) {
+func NewSalesforceUtils(authenticate bool, config Config) (utils *SalesforceUtils, err error) {
 	if config.BaseUrl == "" {
 		config.BaseUrl = os.Getenv("SALESFORCE_BASE_URL")
 	}
