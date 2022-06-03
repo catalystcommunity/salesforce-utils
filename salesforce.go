@@ -25,7 +25,7 @@ type Config struct {
 // NewSalesforceUtils creates a new instance of SalesforceUtils with the given configuration. If any configuration is
 // not set, it will look up the value from environment variables instead. If the configuration is inavlid, an error
 // will be returned.
-func NewSalesforceUtils(authenticate bool, config Config) (utils *SalesforceUtils, err error) {
+func NewSalesforceUtils(authenticate bool, config Config) (*SalesforceUtils, error) {
 	if config.BaseUrl == "" {
 		config.BaseUrl = os.Getenv("SALESFORCE_BASE_URL")
 	}
@@ -48,14 +48,15 @@ func NewSalesforceUtils(authenticate bool, config Config) (utils *SalesforceUtil
 		config.GrantType = env.GetEnvOrDefault("SALESFORCE_GRANT_TYPE", "password")
 	}
 	// validate the config
-	_, err = govalidator.ValidateStruct(config)
+	_, err := govalidator.ValidateStruct(config)
 	if err != nil {
-		return
+		return nil, err
 	}
+	utils := &SalesforceUtils{Config: config}
 	utils.Config = config
 	// authenticate
 	if authenticate {
 		err = utils.Authenticate()
 	}
-	return
+	return utils, err
 }
