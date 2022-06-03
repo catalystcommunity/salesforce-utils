@@ -6,6 +6,7 @@ import (
 	"github.com/joomcode/errorx"
 	"github.com/valyala/fasthttp"
 	"net/http"
+	"net/url"
 	"strings"
 )
 
@@ -61,8 +62,12 @@ func (s SalesforceUtils) getSoqlUrl() string {
 
 // getQueryUrl gets a formatted url to the soql endpoint with the formatted query string included
 func (s SalesforceUtils) getQueryUrl(query string) string {
+	// salesforce expects `+` in place of spaces
 	formattedQuery := strings.Replace(query, " ", "+", -1)
-	return fmt.Sprintf("%s?q=%s", s.getSoqlUrl(), formattedQuery)
+	// url encode the query
+	params := url.Values{}
+	params.Add("q", formattedQuery)
+	return fmt.Sprintf("%s?%s", s.getSoqlUrl(), params.Encode())
 }
 
 // getSoqlUrl gets a formatted url to the soql endpoint
