@@ -22,7 +22,7 @@ func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse,
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getQueryUrl(query)
 	req.SetRequestURI(uri)
-	req.Header.SetMethod(http.MethodPost)
+	req.Header.SetMethod(http.MethodGet)
 	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
@@ -41,7 +41,7 @@ func (s *SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlRe
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getNextRecordsUrl(nextRecordsUrl)
 	req.SetRequestURI(uri)
-	req.Header.SetMethod(http.MethodPost)
+	req.Header.SetMethod(http.MethodGet)
 	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
