@@ -7,7 +7,6 @@ import (
 	"github.com/valyala/fasthttp"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 type SoqlResponse struct {
@@ -22,7 +21,7 @@ func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse,
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getQueryUrl(query)
 	req.SetRequestURI(uri)
-	req.Header.SetMethod(http.MethodPost)
+	req.Header.SetMethod(http.MethodGet)
 	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
@@ -41,7 +40,7 @@ func (s *SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlRe
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getNextRecordsUrl(nextRecordsUrl)
 	req.SetRequestURI(uri)
-	req.Header.SetMethod(http.MethodPost)
+	req.Header.SetMethod(http.MethodGet)
 	body, statusCode, requestErr := s.sendRequest(req)
 	if requestErr != nil {
 		err = requestErr
@@ -62,11 +61,9 @@ func (s *SalesforceUtils) getSoqlUrl() string {
 
 // getQueryUrl gets a formatted url to the soql endpoint with the formatted query string included
 func (s *SalesforceUtils) getQueryUrl(query string) string {
-	// salesforce expects `+` in place of spaces
-	formattedQuery := strings.Replace(query, " ", "+", -1)
 	// url encode the query
 	params := url.Values{}
-	params.Add("q", formattedQuery)
+	params.Add("q", query)
 	return fmt.Sprintf("%s?%s", s.getSoqlUrl(), params.Encode())
 }
 
