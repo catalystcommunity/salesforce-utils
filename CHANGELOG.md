@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.1...v1.0.2) (2022-09-12)
+
+
+### Bug Fixes
+
+* add a describe object method and response struct ([#3](https://github.com/catalystsquad/salesforce-utils/issues/3)) ([30755cc](https://github.com/catalystsquad/salesforce-utils/commit/30755cc6c10ff655a2920e3e13cac23982551d0d))
+
 ## [1.0.1](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.0...v1.0.1) (2022-06-06)
 
 
