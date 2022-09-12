@@ -3,9 +3,10 @@ package pkg
 import (
 	"encoding/json"
 	"fmt"
+	"net/http"
+
 	"github.com/joomcode/errorx"
 	"github.com/valyala/fasthttp"
-	"net/http"
 )
 
 type ObjectResponse struct {
@@ -69,6 +70,42 @@ func (s *SalesforceUtils) DeleteObject(typeName, id string) error {
 	return nil
 }
 
+// DescribeObjectResponse is a simplified struct representation of the json
+// response from the "sObject Describe" API call. Currently only contains the
+// "name" and "fields" fields.
+type DescribeObjectResponse struct {
+	Name   string                         `json:"name"`
+	Fields []DescribeObjectResponseFields `json:"fields"`
+}
+
+// DescribeObjectResponseFields is a nested struct for the Fields field in the
+// "sObject Describe" API response
+type DescribeObjectResponseFields struct {
+	Name string `json:"name"`
+	Type string `json:"type"`
+}
+
+// DescribeObject describes the object type, returning all of the field and types
+func (s *SalesforceUtils) DescribeObject(typeName string) (response DescribeObjectResponse, err error) {
+	req := fasthttp.AcquireRequest()
+	defer fasthttp.ReleaseRequest(req)
+	uri := s.getDescribeUrl(typeName)
+	req.SetRequestURI(uri)
+	req.Header.SetMethod(http.MethodGet)
+	req.Header.Set("Content-Type", "application/json")
+	body, statusCode, requestErr := s.sendRequest(req)
+	if requestErr != nil {
+		err = requestErr
+		return
+	}
+	if statusCode != http.StatusOK {
+		err = errorx.IllegalState.New("unexpected status code: %d with body: %s", statusCode, body)
+		return
+	}
+	err = json.Unmarshal(body, &response)
+	return
+}
+
 // getDataUrl gets a formatted url to the data endpoint
 func (s *SalesforceUtils) getDataUrl() string {
 	return fmt.Sprintf("%s/services/data/v%s/sobjects", s.Config.BaseUrl, s.Config.ApiVersion)
@@ -81,4 +118,8 @@ func (s *SalesforceUtils) getTypeUrl(typeName string) string {
 // getObjectIdUrl gets a formatted url to the endoint for a specific object by id
 func (s *SalesforceUtils) getObjectIdUrl(typeName, id string) string {
 	return fmt.Sprintf("%s/%s", s.getTypeUrl(typeName), id)
+}
+
+func (s *SalesforceUtils) getDescribeUrl(typeName string) string {
+	return fmt.Sprintf("%s/describe", s.getTypeUrl(typeName))
 }
