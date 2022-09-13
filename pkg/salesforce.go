@@ -1,25 +1,29 @@
 package pkg
 
 import (
+	"os"
+
 	"github.com/asaskevich/govalidator"
 	"github.com/catalystsquad/app-utils-go/env"
-	"os"
+	"github.com/valyala/fasthttp"
 )
 
 // SalesforceUtils is the struct that holds config and credentials
 type SalesforceUtils struct {
-	Config      Config
-	Credentials SalesforceCredentials
+	Config         Config
+	Credentials    SalesforceCredentials
+	FastHTTPClient *fasthttp.Client
 }
 
 type Config struct {
-	BaseUrl      string `valid:"url,required"`
-	ApiVersion   string `valid:"required"`
-	ClientId     string `valid:"required"`
-	ClientSecret string `valid:"required"`
-	Username     string `valid:"required"`
-	Password     string `valid:"required"`
-	GrantType    string `valid:"required"`
+	BaseUrl        string `valid:"url,required"`
+	ApiVersion     string `valid:"required"`
+	ClientId       string `valid:"required"`
+	ClientSecret   string `valid:"required"`
+	Username       string `valid:"required"`
+	Password       string `valid:"required"`
+	GrantType      string `valid:"required"`
+	FastHTTPClient *fasthttp.Client
 }
 
 // NewSalesforceUtils creates a new instance of SalesforceUtils with the given configuration. If any configuration is
@@ -54,6 +58,12 @@ func NewSalesforceUtils(authenticate bool, config Config) (*SalesforceUtils, err
 	}
 	utils := &SalesforceUtils{Config: config}
 	utils.Config = config
+	// allow passing a custom fasthttp client, default to empty
+	if config.FastHTTPClient != nil {
+		utils.FastHTTPClient = config.FastHTTPClient
+	} else {
+		utils.FastHTTPClient = &fasthttp.Client{}
+	}
 	// authenticate
 	if authenticate {
 		err = utils.Authenticate()
