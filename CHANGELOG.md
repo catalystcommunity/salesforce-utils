@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.3...v1.0.4) (2022-09-28)
+
+
+### Bug Fixes
+
+* add bulk api methods ([#5](https://github.com/catalystsquad/salesforce-utils/issues/5)) ([462db22](https://github.com/catalystsquad/salesforce-utils/commit/462db22d95d91b05837f100e594fcd3bfb41f84e))
+
 ## [1.0.3](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.2...v1.0.3) (2022-09-13)
 
 
