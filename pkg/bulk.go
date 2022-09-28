@@ -29,11 +29,7 @@ type BulkJobRecord struct {
 	TotalProcessingTimeMilliseconds int64   `json:"totalProcessingTime"`
 }
 
-type CreateBulkQueryJobResponse struct {
-	Record BulkJobRecord
-}
-
-func (s *SalesforceUtils) CreateBulkQueryJob(query string) (response CreateBulkQueryJobResponse, err error) {
+func (s *SalesforceUtils) CreateBulkQueryJob(query string) (response BulkJobRecord, err error) {
 	queryBody := map[string]string{
 		"operation": "query",
 		"query":     query,
@@ -59,7 +55,7 @@ func (s *SalesforceUtils) CreateBulkQueryJob(query string) (response CreateBulkQ
 		err = errorx.Decorate(err, "unexpected status code: %d with body: %s", statusCode, responseBody)
 		return
 	}
-	err = json.Unmarshal(responseBody, &response.Record)
+	err = json.Unmarshal(responseBody, &response)
 	return
 }
 
@@ -67,11 +63,7 @@ func (s *SalesforceUtils) getBulkUrl() string {
 	return fmt.Sprintf("%s/services/data/v%s/jobs/query", s.Config.BaseUrl, s.Config.ApiVersion)
 }
 
-type GetBulkQueryJobResponse struct {
-	Record BulkJobRecord
-}
-
-func (s *SalesforceUtils) GetBulkQueryJob(queryJobID string) (response GetBulkQueryJobResponse, err error) {
+func (s *SalesforceUtils) GetBulkQueryJob(queryJobID string) (response BulkJobRecord, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getBulkQueryJobInfoUrl(queryJobID)
@@ -86,7 +78,7 @@ func (s *SalesforceUtils) GetBulkQueryJob(queryJobID string) (response GetBulkQu
 		err = errorx.Decorate(err, "unexpected status code: %d with body: %s", statusCode, body)
 		return
 	}
-	err = json.Unmarshal(body, &response.Record)
+	err = json.Unmarshal(body, &response)
 	return
 }
 
