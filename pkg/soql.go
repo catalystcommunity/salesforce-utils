@@ -3,10 +3,11 @@ package pkg
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/joomcode/errorx"
-	"github.com/valyala/fasthttp"
 	"net/http"
 	"net/url"
+
+	"github.com/joomcode/errorx"
+	"github.com/valyala/fasthttp"
 )
 
 type SoqlResponse struct {
@@ -22,7 +23,8 @@ func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse,
 	uri := s.getQueryUrl(query)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodGet)
-	body, statusCode, requestErr := s.sendRequest(req)
+	body, statusCode, deferredFunc, requestErr := s.sendRequest(req)
+	defer deferredFunc()
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -41,7 +43,8 @@ func (s *SalesforceUtils) GetNextRecords(nextRecordsUrl string) (response SoqlRe
 	uri := s.getNextRecordsUrl(nextRecordsUrl)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodGet)
-	body, statusCode, requestErr := s.sendRequest(req)
+	body, statusCode, deferredFunc, requestErr := s.sendRequest(req)
+	defer deferredFunc()
 	if requestErr != nil {
 		err = requestErr
 		return

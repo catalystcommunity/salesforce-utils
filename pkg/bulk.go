@@ -46,7 +46,8 @@ func (s *SalesforceUtils) CreateBulkQueryJob(query string) (response BulkJobReco
 	req.Header.SetMethod(http.MethodPost)
 	req.Header.Set("Content-Type", "application/json")
 	req.SetBody(queryBodyBytes)
-	responseBody, statusCode, requestErr := s.sendRequest(req)
+	responseBody, statusCode, deferredFunc, requestErr := s.sendRequest(req)
+	defer deferredFunc()
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -69,7 +70,8 @@ func (s *SalesforceUtils) GetBulkQueryJob(queryJobID string) (response BulkJobRe
 	uri := s.getBulkQueryJobInfoUrl(queryJobID)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodGet)
-	body, statusCode, requestErr := s.sendRequest(req)
+	body, statusCode, deferredFunc, requestErr := s.sendRequest(req)
+	defer deferredFunc()
 	if requestErr != nil {
 		err = requestErr
 		return
@@ -146,7 +148,8 @@ func (s *SalesforceUtils) ListBulkJobs() (response ListBulkJobsResponse, err err
 	uri := s.getListBulkJobsUrl()
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodGet)
-	body, statusCode, requestErr := s.sendRequest(req)
+	body, statusCode, deferredFunc, requestErr := s.sendRequest(req)
+	defer deferredFunc()
 	if requestErr != nil {
 		err = requestErr
 		return
