@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.4...v1.0.5) (2022-10-17)
+
+
+### Bug Fixes
+
+* release response after response is handled ([#7](https://github.com/catalystsquad/salesforce-utils/issues/7)) ([d9ecfe1](https://github.com/catalystsquad/salesforce-utils/commit/d9ecfe18362699fc28e0cbb46ab6f87d5d180841)), closes [/github.com/valyala/fasthttp/blob/2c8ce3b40e933669366c9519503bc8df4f1a8b8a/http.go#L339-L341](https://github.com//github.com/valyala/fasthttp/blob/2c8ce3b40e933669366c9519503bc8df4f1a8b8a/http.go/issues/L339-L341)
+
 ## [1.0.4](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.3...v1.0.4) (2022-09-28)
 
 
