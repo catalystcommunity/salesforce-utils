@@ -3,10 +3,11 @@ package pkg
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/joomcode/errorx"
-	"github.com/valyala/fasthttp"
 	"net/http"
 	"net/url"
+
+	"github.com/joomcode/errorx"
+	"github.com/valyala/fasthttp"
 )
 
 // SalesforceCredentials represents the response from salesforce's /services/oauth2/token endpoint to get an access token
@@ -21,7 +22,8 @@ type SalesforceCredentials struct {
 
 // Authenticate authenticates with salesforce, storing the resulting credentials on the SalesforceUtils object
 func (s *SalesforceUtils) Authenticate() error {
-	body, statusCode, err := s.getSalesforceAccessToken()
+	body, statusCode, deferredFunc, err := s.getSalesforceAccessToken()
+	defer deferredFunc()
 	if err != nil || statusCode != 200 {
 		return errorx.Decorate(err, "error getting access token with status code: %d and body: %s", statusCode, body)
 	}
@@ -35,7 +37,7 @@ func (s *SalesforceUtils) Authenticate() error {
 }
 
 // getSalesforceAccessToken makes an http request to the salesforce api to get an access token
-func (s *SalesforceUtils) getSalesforceAccessToken() ([]byte, int, error) {
+func (s *SalesforceUtils) getSalesforceAccessToken() ([]byte, int, func(), error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
 	uri := s.getAuthUrl()
