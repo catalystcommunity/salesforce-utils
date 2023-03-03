@@ -17,10 +17,19 @@ type SoqlResponse struct {
 	NextRecordsUrl string
 }
 
-func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (response SoqlResponse, err error) {
+func (s *SalesforceUtils) ExecuteSoqlQuery(query string) (SoqlResponse, error) {
+	uri := s.getQueryUrl(query, s.getSoqlUrl())
+	return s.doSoqlQuery(uri)
+}
+
+func (s *SalesforceUtils) ExecuteSoqlQueryAll(query string) (SoqlResponse, error) {
+	uri := s.getQueryUrl(query, s.getSoqlQueryAllUrl())
+	return s.doSoqlQuery(uri)
+}
+
+func (s *SalesforceUtils) doSoqlQuery(uri string) (response SoqlResponse, err error) {
 	req := fasthttp.AcquireRequest()
 	defer fasthttp.ReleaseRequest(req)
-	uri := s.getQueryUrl(query)
 	req.SetRequestURI(uri)
 	req.Header.SetMethod(http.MethodGet)
 	body, statusCode, deferredFunc, requestErr := s.sendRequest(req)
@@ -62,12 +71,17 @@ func (s *SalesforceUtils) getSoqlUrl() string {
 	return fmt.Sprintf("%s/services/data/v%s/query", s.Config.BaseUrl, s.Config.ApiVersion)
 }
 
+// getSoqlQueryAllUrl gets a formatted url to the queryall soql endpoint
+func (s *SalesforceUtils) getSoqlQueryAllUrl() string {
+	return fmt.Sprintf("%s/services/data/v%s/queryAll", s.Config.BaseUrl, s.Config.ApiVersion)
+}
+
 // getQueryUrl gets a formatted url to the soql endpoint with the formatted query string included
-func (s *SalesforceUtils) getQueryUrl(query string) string {
+func (s *SalesforceUtils) getQueryUrl(query string, path string) string {
 	// url encode the query
 	params := url.Values{}
 	params.Add("q", query)
-	return fmt.Sprintf("%s?%s", s.getSoqlUrl(), params.Encode())
+	return fmt.Sprintf("%s?%s", path, params.Encode())
 }
 
 // getSoqlUrl gets a formatted url to the soql endpoint
