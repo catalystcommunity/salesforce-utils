@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.5...v1.0.6) (2023-03-03)
+
+
+### Bug Fixes
+
+* implement queryall soql endpoint ([#8](https://github.com/catalystsquad/salesforce-utils/issues/8)) ([e75522f](https://github.com/catalystsquad/salesforce-utils/commit/e75522fecb3f6e0464a3865794c7ec4e459b81c5))
+
 ## [1.0.5](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.4...v1.0.5) (2022-10-17)
 
 
