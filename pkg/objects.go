@@ -84,8 +84,10 @@ type DescribeObjectResponse struct {
 // DescribeObjectResponseFields is a nested struct for the Fields field in the
 // "sObject Describe" API response
 type DescribeObjectResponseFields struct {
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	Calculated bool   `json:"calculated"`
+	Createable bool   `json:"createable"`
 }
 
 // DescribeObject describes the object type, returning all of the field and types
