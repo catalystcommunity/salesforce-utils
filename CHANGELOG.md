@@ -1,3 +1,10 @@
+## [1.0.7](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.6...v1.0.7) (2023-03-08)
+
+
+### Bug Fixes
+
+* add calculated and createable fields to describe object response ([#9](https://github.com/catalystsquad/salesforce-utils/issues/9)) ([8a2fbff](https://github.com/catalystsquad/salesforce-utils/commit/8a2fbff572603171061ce1ce45af04a57d2be577))
+
 ## [1.0.6](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.5...v1.0.6) (2023-03-03)
 
 
