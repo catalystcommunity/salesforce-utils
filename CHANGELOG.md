@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.7...v1.1.0) (2023-08-24)
+
+
+### Features
+
+* add limits api ([#10](https://github.com/catalystsquad/salesforce-utils/issues/10)) ([e136375](https://github.com/catalystsquad/salesforce-utils/commit/e136375ead885108e8efefcbf2146fcc42da2efb))
+
 ## [1.0.7](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.6...v1.0.7) (2023-03-08)
 
 
