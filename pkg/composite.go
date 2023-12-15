@@ -55,8 +55,9 @@ type CompositeSubResponse struct {
 type CompositeSubResponseBody struct {
 	Id      string `json:"id"`
 	Success bool   `json:"success"`
-	// TODO strongly type this if we figure out the possibilities
-	Errors []map[string]interface{} `json:"errors"`
+	// TODO strongly type this when we figure out the possibilities. the docs
+	// don't specify what this field is supposed to be
+	Errors []interface{} `json:"errors"`
 }
 
 // CompositeCreateObjects creates a list of objects in salesforce using the
