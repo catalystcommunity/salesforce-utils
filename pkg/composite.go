@@ -35,8 +35,8 @@ type CompositeRequest struct {
 type CompositeSubRequest struct {
 	// the use of json.RawMessage here is to avoid the need to unmarshal the
 	// body from json and remarshal it.
-	Body        json.RawMessage `json:"body"`
-	HttpHeaders interface{}     `json:"httpHeaders"`
+	Body        json.RawMessage `json:"body,omitempty"`
+	HttpHeaders interface{}     `json:"httpHeaders,omitempty"`
 	Method      string          `json:"method"`
 	ReferenceId string          `json:"referenceId"`
 	Url         string          `json:"url"`
@@ -53,27 +53,41 @@ type CompositeSubResponse struct {
 }
 
 type CompositeSubResponseBody struct {
-	Id      string   `json:"id"`
-	Success bool     `json:"success"`
-	Errors  []string `json:"errors"`
+	Id      string `json:"id"`
+	Success bool   `json:"success"`
+	// TODO strongly type this if we figure out the possibilities
+	Errors []map[string]interface{} `json:"errors"`
 }
 
-func (s *SalesforceUtils) CreateObjects(objects []CompositeObject) (response CompositeResponse, err error) {
+// CompositeCreateObjects creates a list of objects in salesforce using the
+// composite api
+// ref: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_composite_post.htm
+func (s *SalesforceUtils) CompositeCreateObjects(objects []CompositeObject) (response CompositeResponse, err error) {
 	compositeReq := s.convertToCompositeCreateRequest(objects)
 	return s.doCompositeRequest(compositeReq)
 }
 
-func (s *SalesforceUtils) UpdateObjects(objects []CompositeObject) (response CompositeResponse, err error) {
+// CompositeUpdateObjects updates a list of objects in salesforce using the
+// composite api
+// ref: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_composite_post.htm
+func (s *SalesforceUtils) CompositeUpdateObjects(objects []CompositeObject) (response CompositeResponse, err error) {
 	compositeReq := s.convertToCompositeUpdateRequest(objects)
 	return s.doCompositeRequest(compositeReq)
 }
 
-func (s *SalesforceUtils) UpsertObjects(objects []CompositeObject) (response CompositeResponse, err error) {
+// CompositeUpsertObjects creates or updates a list of objects in salesforce
+// using the composite api. determines update vs create based on the existence
+// of the salesforce id
+// ref: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_composite_post.htm
+func (s *SalesforceUtils) CompositeUpsertObjects(objects []CompositeObject) (response CompositeResponse, err error) {
 	compositeReq := s.convertToCompositeUpsertRequest(objects)
 	return s.doCompositeRequest(compositeReq)
 }
 
-func (s *SalesforceUtils) DeleteObjects(objects []CompositeObject) (response CompositeResponse, err error) {
+// CompositeDeleteObjects deletes a list of objects from salesforce using the
+// composite api
+// ref: https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/resources_composite_composite_post.htm
+func (s *SalesforceUtils) CompositeDeleteObjects(objects []CompositeObject) (response CompositeResponse, err error) {
 	compositeReq := s.convertToCompositeDeleteRequest(objects)
 	return s.doCompositeRequest(compositeReq)
 }
@@ -82,11 +96,7 @@ func (s *SalesforceUtils) DeleteObjects(objects []CompositeObject) (response Com
 // for creation into a single CompositeRequest object that can be marshalled to
 // json to send to salesforce
 func (s *SalesforceUtils) convertToCompositeCreateRequest(objects []CompositeObject) CompositeRequest {
-	compositeReq := CompositeRequest{
-		// always set to true, so that the api behaves transactionally.
-		AllOrNone:        true,
-		CompositeRequest: []CompositeSubRequest{},
-	}
+	compositeReq := newCompositeRequest()
 
 	for _, obj := range objects {
 		compositeReq.CompositeRequest = append(compositeReq.CompositeRequest, CompositeSubRequest{
@@ -104,11 +114,7 @@ func (s *SalesforceUtils) convertToCompositeCreateRequest(objects []CompositeObj
 // for update into a single CompositeRequest object that can be marshalled to
 // json to send to salesforce
 func (s *SalesforceUtils) convertToCompositeUpdateRequest(objects []CompositeObject) CompositeRequest {
-	compositeReq := CompositeRequest{
-		// always set to true, so that the api behaves transactionally.
-		AllOrNone:        true,
-		CompositeRequest: []CompositeSubRequest{},
-	}
+	compositeReq := newCompositeRequest()
 
 	for _, obj := range objects {
 		compositeReq.CompositeRequest = append(compositeReq.CompositeRequest, CompositeSubRequest{
@@ -127,11 +133,7 @@ func (s *SalesforceUtils) convertToCompositeUpdateRequest(objects []CompositeObj
 // be marshalled to json to send to the salesforce composite api. determines
 // update vs create based on the existence of the salesforce id
 func (s *SalesforceUtils) convertToCompositeUpsertRequest(objects []CompositeObject) CompositeRequest {
-	compositeReq := CompositeRequest{
-		// always set to true, so that the api behaves transactionally.
-		AllOrNone:        true,
-		CompositeRequest: []CompositeSubRequest{},
-	}
+	compositeReq := newCompositeRequest()
 
 	for _, obj := range objects {
 		if obj.SalesforceId == "" {
@@ -152,6 +154,14 @@ func (s *SalesforceUtils) convertToCompositeUpsertRequest(objects []CompositeObj
 	}
 
 	return compositeReq
+}
+
+func newCompositeRequest() CompositeRequest {
+	return CompositeRequest{
+		// always set to true, so that the api behaves transactionally.
+		AllOrNone:        true,
+		CompositeRequest: []CompositeSubRequest{},
+	}
 }
 
 // convertToCompositeDeleteRequest converts a list of CompositeObjects intended
