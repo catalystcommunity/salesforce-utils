@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/catalystsquad/salesforce-utils/compare/v1.1.0...v1.2.0) (2023-12-15)
+
+
+### Features
+
+* implement composite and collections api ([#12](https://github.com/catalystsquad/salesforce-utils/issues/12)) ([d038771](https://github.com/catalystsquad/salesforce-utils/commit/d038771a16e82621abf3045da80cef3b456e5c80))
+
 # [1.1.0](https://github.com/catalystsquad/salesforce-utils/compare/v1.0.7...v1.1.0) (2023-08-24)
 
 
