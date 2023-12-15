@@ -112,20 +112,32 @@ func (s *SalesforceUtils) DescribeObject(typeName string) (response DescribeObje
 	return
 }
 
-// getDataUrl gets a formatted url to the data endpoint
-func (s *SalesforceUtils) getDataUrl() string {
-	return fmt.Sprintf("%s/services/data/v%s/sobjects", s.Config.BaseUrl, s.Config.ApiVersion)
+// getDataPath gets a formatted path to the data endpoint
+func (s *SalesforceUtils) getDataPath() string {
+	return fmt.Sprintf("/services/data/v%s/sobjects", s.Config.ApiVersion)
 }
 
+// getTypePath gets a formatted path to the endoint for a specific object type
+func (s *SalesforceUtils) getTypePath(typeName string) string {
+	return fmt.Sprintf("%s/%s", s.getDataPath(), typeName)
+}
+
+// getTypeUrl gets a formatted full url to the endoint for a specific object type
 func (s *SalesforceUtils) getTypeUrl(typeName string) string {
-	return fmt.Sprintf("%s/%s", s.getDataUrl(), typeName)
+	return fmt.Sprintf("%s%s", s.Config.BaseUrl, s.getTypePath(typeName))
 }
 
-// getObjectIdUrl gets a formatted url to the endoint for a specific object by id
+// getObjectIdUrl gets a formatted path to the endoint for a specific object by id
+func (s *SalesforceUtils) getObjectIdPath(typeName, id string) string {
+	return fmt.Sprintf("%s/%s", s.getTypePath(typeName), id)
+}
+
+// getObjectIdUrl gets a formatted full url to the endoint for a specific object by id
 func (s *SalesforceUtils) getObjectIdUrl(typeName, id string) string {
-	return fmt.Sprintf("%s/%s", s.getTypeUrl(typeName), id)
+	return fmt.Sprintf("%s%s", s.Config.BaseUrl, s.getObjectIdPath(typeName, id))
 }
 
+// getDescribeUrl gets a formatted full url to the endoint for a specific object by id
 func (s *SalesforceUtils) getDescribeUrl(typeName string) string {
 	return fmt.Sprintf("%s/describe", s.getTypeUrl(typeName))
 }
