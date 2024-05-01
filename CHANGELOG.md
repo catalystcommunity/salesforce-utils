@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/catalystsquad/salesforce-utils/compare/v1.2.0...v1.2.1) (2024-05-01)
+
+
+### Bug Fixes
+
+* add bulk queryall endpoint ([#13](https://github.com/catalystsquad/salesforce-utils/issues/13)) ([a852633](https://github.com/catalystsquad/salesforce-utils/commit/a8526339098d0ad9cba5e397885a5089f0ea56e9))
+
 # [1.2.0](https://github.com/catalystsquad/salesforce-utils/compare/v1.1.0...v1.2.0) (2023-12-15)
 
 
