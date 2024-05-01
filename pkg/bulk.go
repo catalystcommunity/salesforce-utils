@@ -29,9 +29,24 @@ type BulkJobRecord struct {
 	TotalProcessingTimeMilliseconds int64   `json:"totalProcessingTime"`
 }
 
-func (s *SalesforceUtils) CreateBulkQueryJob(query string) (response BulkJobRecord, err error) {
+type BulkJobOperation string
+
+const (
+	BulkJobOperationQuery    BulkJobOperation = "query"
+	BulkJobOperationQueryAll BulkJobOperation = "queryAll"
+)
+
+func (s *SalesforceUtils) CreateBulkQueryJob(query string) (BulkJobRecord, error) {
+	return s.createBulkJob(BulkJobOperationQuery, query)
+}
+
+func (s *SalesforceUtils) CreateBulkQueryAllJob(query string) (BulkJobRecord, error) {
+	return s.createBulkJob(BulkJobOperationQueryAll, query)
+}
+
+func (s *SalesforceUtils) createBulkJob(operation BulkJobOperation, query string) (response BulkJobRecord, err error) {
 	queryBody := map[string]string{
-		"operation": "query",
+		"operation": string(operation),
 		"query":     query,
 	}
 	queryBodyBytes, err := json.Marshal(queryBody)
