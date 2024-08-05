@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/asaskevich/govalidator"
-	"github.com/catalystsquad/app-utils-go/env"
+	"github.com/catalystcommunity/app-utils-go/env"
 	"github.com/valyala/fasthttp"
 )
 

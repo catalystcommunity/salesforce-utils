@@ -10,7 +10,7 @@ Instantiate a new instance using `NewSalesforceUtils()`. Configuration can be pr
 ```go  
 package main  
   
-import salesforce_utils "github.com/catalystsquad/salesforce-utils"
+import salesforce_utils "github.com/catalystcommunity/salesforce-utils"
   
 func main() {
 	// if authenticate is true then authentication is done as part of instantiation. If authenticate is 	
