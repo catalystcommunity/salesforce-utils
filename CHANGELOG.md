@@ -1,3 +1,11 @@
+## [1.2.2](https://github.com/catalystcommunity/salesforce-utils/compare/v1.2.1...v1.2.2) (2024-11-07)
+
+
+### Bug Fixes
+
+* move to catalystcommunity ([283e132](https://github.com/catalystcommunity/salesforce-utils/commit/283e13239cd8f807a3e4d11de844a5a71e92fbb2))
+* update catalystcommunity dependency version ([#14](https://github.com/catalystcommunity/salesforce-utils/issues/14)) ([98d5cde](https://github.com/catalystcommunity/salesforce-utils/commit/98d5cde519a2ee137122946f043fdb03190f6b5e))
+
 ## [1.2.1](https://github.com/catalystcommunity/salesforce-utils/compare/v1.2.0...v1.2.1) (2024-05-01)
 
 
