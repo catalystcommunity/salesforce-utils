@@ -1,6 +1,6 @@
 module github.com/catalystcommunity/salesforce-utils
 
-go 1.18
+go 1.24
 
 require (
 	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d
@@ -11,7 +11,7 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/klauspost/compress v1.15.0 // indirect
+	github.com/klauspost/compress v1.18.7 // indirect
 	github.com/sirupsen/logrus v1.9.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	golang.org/x/sys v0.5.0 // indirect
